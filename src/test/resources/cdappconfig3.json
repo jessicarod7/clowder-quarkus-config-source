@@ -1,4 +1,9 @@
 {
+  "inMemoryDb": {
+    "hostname": "some.redis.db",
+    "port": 6379,
+    "username": "dbuser"
+  },
   "endpoints": [
     {
       "app": "notifications",

@@ -1,18 +1,7 @@
 package com.redhat.cloud.common.clowder.configsource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.cloud.common.clowder.configsource.handlers.ClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.EndpointsClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.KafkaBootstrapServersClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.KafkaSecurityClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.MicroprofileMessagingClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.OptionalEndpointsClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.OptionalPrivateEndpointsClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.PrivateEndpointsClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.QuarkusDataSourceClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.QuarkusLogCloudWatchClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.QuarkusUnleashClowderPropertyHandler;
-import com.redhat.cloud.common.clowder.configsource.handlers.WebPortClowderPropertyHandler;
+import com.redhat.cloud.common.clowder.configsource.handlers.*;
 import io.smallrye.config.ConfigSourceContext;
 import io.smallrye.config.ConfigSourceFactory;
 import io.smallrye.config.ConfigValue;
@@ -76,7 +65,8 @@ public class ClowderConfigSourceFactory implements ConfigSourceFactory {
                 new OptionalPrivateEndpointsClowderPropertyHandler(root),
                 new PrivateEndpointsClowderPropertyHandler(root),
                 new MicroprofileMessagingClowderPropertyHandler(root),
-                new QuarkusUnleashClowderPropertyHandler(root));
+                new QuarkusUnleashClowderPropertyHandler(root),
+                new QuarkusRedisClowderPropertyHandler(root));
     }
 
     private static List<ConfigSource> loadClowderConfigFromFile(ConfigSourceContext configSourceContext, File clowderConfigFile) {

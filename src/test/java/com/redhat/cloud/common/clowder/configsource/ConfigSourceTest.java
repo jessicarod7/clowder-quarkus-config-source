@@ -170,6 +170,32 @@ public class ConfigSourceTest {
     }
 
     @Test
+    void testInMemoryDb() {
+        String hosts = ccs.getValue("quarkus.redis.hosts");
+        assertEquals("redis://some.redis.host:6379", hosts);
+    }
+
+    @Test
+    void testInMemoryDbWithCredentials() {
+        ClowderConfigSource ccs2 = configSourceWithFile("/cdappconfig2.json", exposeKafkaSslConfigKeys);
+        String hosts = ccs2.getValue("quarkus.redis.hosts");
+        assertEquals("redis://dbuser:secret@some.redis.db:6379", hosts);
+
+        String password = ccs2.getValue("quarkus.redis.password");
+        assertEquals("secret", password);
+    }
+
+    /** Tests that a password must be provided if the username is specified. */
+    @Test
+    void testInMemoryDbWithMissingPassword() {
+        ClowderConfigSource ccs3 = configSourceWithFile("/cdappconfig3.json", exposeKafkaSslConfigKeys);
+        assertThrows(IllegalStateException.class, () -> ccs3.getValue("quarkus.redis.hosts"), "In-memory DB password must be specified if username is provided");
+
+        String password = ccs3.getValue("quarkus.redis.password");
+        assertNull(password);
+    }
+
+    @Test
     void testUnchangedProperty() {
         String value = ccs.getValue("quarkus.http.access-log.category");
         assertEquals("access_log", value);
@@ -264,6 +290,12 @@ public class ConfigSourceTest {
     void testNoDatabaseSection() {
         ClowderConfigSource source = configSourceWithFile("/cdappconfig3.json", exposeKafkaSslConfigKeys);
         assertThrows(IllegalStateException.class, () -> source.getValue("quarkus.datasource.username"));
+    }
+
+    @Test
+    void testNoInMemoryDbSection() {
+        ClowderConfigSource source = configSourceWithFile("/cdappconfig4.json", exposeKafkaSslConfigKeys);
+        assertThrows(IllegalStateException.class, () -> source.getValue("quarkus.redis.hosts"));
     }
 
     @Test
